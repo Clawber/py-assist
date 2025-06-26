@@ -15,6 +15,27 @@ COMMANDS = {
     "help": "Show this help message.",
 }
 
+def fuzzy_match(query, text):
+    """
+    Checks if all characters in the query appear in the text in the correct order.
+
+    Args:
+        query (str): The search string (e.g., "sv").
+        text (str): The string to search within (e.g., "show version").
+
+    Returns:
+        bool: True if it's a fuzzy match, False otherwise.
+    """
+    query = query.lower()
+    text = text.lower()
+    
+    # Use an iterator to avoid re-scanning the string
+    it = iter(text)
+    
+    # Check if for each character in the query, you can find it in the
+    # remainder of the text iterator.
+    return all(char in it for char in query)
+
 class AutocompleteEntry(ttk.Entry):
     """
     A ttk.Entry widget that displays a dropdown list of suggestions
@@ -82,7 +103,8 @@ class AutocompleteEntry(ttk.Entry):
             return
 
         # Find matches
-        matches = [cmd for cmd in self.autocomplete_list if cmd.lower().startswith(current_text)]
+        matches = [cmd for cmd in self.autocomplete_list if fuzzy_match(current_text, cmd)]
+        matches.sort(key=lambda cmd: (not cmd.lower().startswith(current_text), len(cmd)))
 
         if matches:
             self._show_listbox()
