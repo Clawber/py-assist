@@ -133,19 +133,19 @@ class AutocompleteEntry(ttk.Entry):
             return "break"
 
     def _on_arrow_up(self, event):
-        """Handles the Up arrow key to navigate the listbox."""
+        """Handles the Up arrow key to navigate the listbox, with wrapping."""
         if self._listbox and self._listbox.winfo_viewable():
             current_selection = self._listbox.curselection()
             
-            if not current_selection: # If nothing is selected
-                next_index = tk.END
+            # If nothing is selected or the first item is selected, wrap to the end
+            if not current_selection or current_selection[0] == 0:
+                next_index = self._listbox.size() - 1
             else:
                 next_index = current_selection[0] - 1
             
-            if next_index >= 0:
-                self._listbox.selection_clear(0, tk.END)
-                self._listbox.selection_set(next_index)
-                self._listbox.activate(next_index)
+            self._listbox.selection_clear(0, tk.END)
+            self._listbox.selection_set(next_index)
+            self._listbox.activate(next_index) # Visually highlights the active line
             
             return "break"
 
