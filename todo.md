@@ -1,7 +1,5 @@
 ### combobox features
-the arrow up does not work when there's nothing to arrow up (wrap)
 if the user has no input, show the list of all commands (make this scrollable if all the commands can't fit)
-
 
 control enter command (backspace)
 
@@ -21,6 +19,7 @@ need generics (when entering command, ending can be others)
 
 close window after entering command
 
+cmnds based on history? most recent
 
 ### Feature creep
 clock app
@@ -31,3 +30,7 @@ clock app
 voice dictation
     voice api
     MVP -> log to a file
+
+
+### Done
+the arrow up does not work when there's nothing to arrow up (wrap)

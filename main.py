@@ -59,35 +59,51 @@ class AutocompleteEntry(ttk.Entry):
         self.bind("<Escape>", self._hide_listbox)
 
     def _create_listbox(self):
-        """Creates and places the listbox for suggestions."""
+        """Creates and places the listbox with a scrollbar."""
         if self._listbox is None:
-            # The listbox needs to be a Toplevel window's child to float over others
             toplevel = self.winfo_toplevel()
-            self._listbox = tk.Listbox(toplevel, font=("Helvetica", 12), highlightthickness=0)
-            
-            # When an item is selected in the listbox (e.g., by clicking)
+            # The container frame allows the listbox and scrollbar to be managed together
+            self._listbox_frame = ttk.Frame(toplevel)
+
+            # Create the scrollbar and listbox
+            scrollbar = ttk.Scrollbar(self._listbox_frame, orient=tk.VERTICAL)
+            # Set a fixed height for the listbox so it doesn't get too long
+            self._listbox = tk.Listbox(
+                self._listbox_frame,
+                font=("Helvetica", 12),
+                highlightthickness=0,
+                height=10, # Limit visible items, enabling scrolling
+                yscrollcommand=scrollbar.set
+            )
+            scrollbar.config(command=self._listbox.yview)
+
+            # Pack them into the frame
+            scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+            self._listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+            # Bind events to the listbox itself
             self._listbox.bind("<<ListboxSelect>>", self._on_listbox_select)
-            self._listbox.bind("<Button-1>", self._on_listbox_select) # For single click selection
+            self._listbox.bind("<Button-1>", self._on_listbox_select)
 
     def _show_listbox(self):
-        """Calculates position and displays the listbox."""
+        """Calculates position and displays the listbox frame."""
         if self._listbox is None:
             self._create_listbox()
 
-        # Get position of the entry widget
         x = self.winfo_x()
         y = self.winfo_y()
         height = self.winfo_height()
         width = self.winfo_width()
         
-        # Use .place() to position the listbox just below the entry
-        self._listbox.place(x=x, y=y + height, width=width)
-        self.focus_set() # Keep focus on the entry widget
+        # Place the entire frame containing the listbox and scrollbar
+        self._listbox_frame.place(x=x, y=y + height, width=width)
+        self.focus_set()
 
     def _hide_listbox(self, event=None):
-        """Hides the listbox."""
-        if self._listbox is not None:
-            self._listbox.place_forget()
+        """Hides the listbox frame."""
+        # Use a check for the frame attribute's existence
+        if hasattr(self, '_listbox_frame') and self._listbox_frame.winfo_viewable():
+            self._listbox_frame.place_forget()
 
     def _on_key_release(self, event):
         """Handles updating the suggestion list as the user types."""
@@ -97,14 +113,13 @@ class AutocompleteEntry(ttk.Entry):
 
         current_text = self.get().lower()
 
-        # If the entry is empty, hide the listbox
+        # show a list of commands on empty textbox
         if not current_text:
-            self._hide_listbox()
-            return
-
-        # Find matches
-        matches = [cmd for cmd in self.autocomplete_list if fuzzy_match(current_text, cmd)]
-        matches.sort(key=lambda cmd: (not cmd.lower().startswith(current_text), len(cmd)))
+            matches = self.autocomplete_list
+        else:
+            matches = [cmd for cmd in self.autocomplete_list if fuzzy_match(current_text, cmd)]
+            # It's good practice to sort fuzzy matches for a better UX
+            matches.sort(key=lambda cmd: (not cmd.lower().startswith(current_text), len(cmd)))
 
         if matches:
             self._show_listbox()
