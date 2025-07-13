@@ -7,6 +7,10 @@ import re
 
 folder_location = "/home/clawber/projects/py-assist/output/"
 
+filenames_dict = {'u': 'urgent', 'd': 'do', 'l': 'lessons', 'c': 'create', 'e': 'experiences', 'b': 'bored', 'w': 'wins', 'x': 'deleted',
+}
+
+
 class LineSorterGUI:
     def __init__(self, root):
         self.root = root
@@ -177,8 +181,14 @@ class LineSorterGUI:
         line_to_move = self.lines[self.current_line]
         
         # Create filename
-        filename = f"stored{letter.upper()}.txt"
         
+        
+
+        if letter in filenames_dict:
+            filename = f"{filenames_dict[letter]}.txt"
+        else:
+            filename = f"braindump-{letter.upper()}.txt"    
+
         try:
             # Append line to the target file
             with open(folder_location + filename, 'a', encoding='utf-8') as file:

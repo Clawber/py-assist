@@ -1,0 +1,1 @@
+#achieved #automation managed to parse through files using terminal scipting
