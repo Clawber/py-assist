@@ -2,7 +2,7 @@
 
 # --- Configuration ---
 # The exact command to run your Python script. Use 'python3' and the full path.
-PYTHON_SCRIPT_COMMAND="python3 /home/clawber/projects/py-assist/bd.py"
+PYTHON_SCRIPT_COMMAND="python3 /home/clawber/projects/py-assist/timetracker.py"
 
 # This is the title you want your terminal window to have.
 # Make sure it's unique and specific.

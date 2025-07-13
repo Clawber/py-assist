@@ -1,5 +1,5 @@
 # The name of the file where we will store our entries.
-FILENAME = "my_log.txt"
+FILENAME = "/home/clawber/projects/py-assist/output/braindump.txt"
 
 def add_to_top_of_file(text):
     """
