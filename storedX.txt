@@ -1,0 +1,8 @@
+meow
+hello
+twitter
+bd tool, but with scheduling
+quit()
+fuzzy finding hax (fuzzy find text, need edit. but editing, need synced yung line sa original data
+terminal launch script using shortcut
+log current time

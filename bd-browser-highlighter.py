@@ -7,7 +7,16 @@ import re
 
 folder_location = "/home/clawber/projects/py-assist/output/"
 
-filenames_dict = {'u': 'urgent', 'd': 'do', 'l': 'lessons', 'c': 'create', 'e': 'experiences', 'b': 'bored', 'w': 'wins', 'x': 'deleted',
+filenames_dict = {
+    'u': 'urgent', 
+    'd': 'do', 
+    'l': 'lessons', 
+    'c': 'create', 
+    'e': 'experiences', 
+    'b': 'bored', 
+    'w': 'wins',
+    'x': 'deleted',
+    'q': 'questions'
 }
 
 
@@ -71,11 +80,14 @@ class LineSorterGUI:
         file_menu.add_command(label="Open", command=self.open_file, accelerator="Ctrl+O")
         file_menu.add_command(label="Save", command=self.save_file, accelerator="Ctrl+S")
         file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.root.quit)
+        file_menu.add_command(label="Exit", command=self.on_exit)
         
         # Bind keyboard shortcuts
         self.root.bind('<Control-o>', lambda e: self.open_file())
         self.root.bind('<Control-s>', lambda e: self.save_file())
+        
+        # Handle window close event
+        self.root.protocol("WM_DELETE_WINDOW", self.on_exit)
         
     def open_file(self):
         file_path = filedialog.askopenfilename(
@@ -104,14 +116,14 @@ class LineSorterGUI:
                 messagebox.showerror("Error", f"Could not open file: {str(e)}")
     
     def save_file(self):
-        if not self.current_file or not self.modified:
+        if not self.current_file:
             return
             
         try:
             with open(self.current_file, 'w', encoding='utf-8') as file:
-                file.write('\n'.join(self.lines))
-                if self.lines:  # Add final newline if there are lines
-                    file.write('\n')
+                if self.lines:
+                    file.write('\n'.join(self.lines) + '\n')
+                # If no lines left, create empty file
             
             self.modified = False
             self.update_status("File saved successfully")
@@ -181,17 +193,11 @@ class LineSorterGUI:
         line_to_move = self.lines[self.current_line]
         
         # Create filename
+        filename = f"stored{letter.upper()}.txt"
         
-        
-
-        if letter in filenames_dict:
-            filename = f"{filenames_dict[letter]}.txt"
-        else:
-            filename = f"braindump-{letter.upper()}.txt"    
-
         try:
             # Append line to the target file
-            with open(folder_location + filename, 'a', encoding='utf-8') as file:
+            with open(filename, 'a', encoding='utf-8') as file:
                 file.write(line_to_move + '\n')
             
             # Remove line from current content
@@ -216,6 +222,18 @@ class LineSorterGUI:
             
         except Exception as e:
             messagebox.showerror("Error", f"Could not write to {filename}: {str(e)}")
+    
+    def on_exit(self):
+        # Save file if modified before exiting
+        if self.modified and self.current_file:
+            self.save_file()
+        self.root.quit()
+    
+    def on_exit(self):
+        # Save file if modified before exiting
+        if self.modified and self.current_file:
+            self.save_file()
+        self.root.quit()
     
     def update_status(self, message):
         self.status_label.config(text=message)

@@ -1,0 +1,5 @@
+voice assist
+dev twitter
+bd tool, screenshotting (checks context switches. Bakit ako galing firefox? bakit ko kinuha mouse, etc)
+fuzzy find todo list. fuzzy find to complete (or TUI navigation, using numbers. Like eisenhower)
+start a blog. List down lessons and stuff
