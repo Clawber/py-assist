@@ -1,0 +1,6 @@
+output/
+output/*
+**/stored-[a-zA-Z].txt
+time_log.json
+*/.env
+.env

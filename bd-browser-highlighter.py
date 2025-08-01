@@ -193,7 +193,10 @@ class LineSorterGUI:
         line_to_move = self.lines[self.current_line]
         
         # Create filename
-        filename = f"stored{letter.upper()}.txt"
+        if letter in filenames_dict:
+            filename = f"{filenames_dict[letter]}.txt"
+        else:
+            filename = f"braindump-{letter.upper()}.txt"    
         
         try:
             # Append line to the target file

@@ -6,7 +6,7 @@ PYTHON_SCRIPT_COMMAND="python3 /home/clawber/projects/py-assist/timetracker.py"
 
 # This is the title you want your terminal window to have.
 # Make sure it's unique and specific.
-WINDOW_TITLE="Timetracker"
+WINDOW_TITLE="Timetracker script"
 
 # Your preferred terminal emulator. Common options:
 # gnome-terminal (Cinnamon default)
